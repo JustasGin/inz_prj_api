@@ -1,14 +1,14 @@
 import React, {Fragment, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 
-export default function Admin({jwt, forbidden}) {
+export default function Admin({jwt, checkStatus}) {
     const navigate = useNavigate()
 
     const [movies, setMovies] = useState([])
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        if (jwt === null || forbidden) {
+        if (jwt === null || checkStatus()) {
             navigate('/login')
             return
         }
@@ -24,7 +24,7 @@ export default function Admin({jwt, forbidden}) {
             .then((json) => {
                 setMovies(json.movies)
             })
-    }, [forbidden, jwt, navigate])
+    }, [checkStatus, jwt, navigate])
 
     if (error !== null)
         return <div>Error: {error.message}</div>

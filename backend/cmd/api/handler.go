@@ -144,7 +144,7 @@ func (app *application) addOrEditMovie(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {
-	var payload MoviePayload
+	var payload models.Movie
 
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
@@ -152,13 +152,7 @@ func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := strconv.Atoi(payload.ID)
-	if err != nil {
-		app.errorJSON(w, err)
-		return
-	}
-
-	err = app.models.DB.DeleteMovieDB(id)
+	err = app.models.DB.DeleteMovieDB(payload.ID)
 	if err != nil {
 		app.errorJSON(w, err)
 		return

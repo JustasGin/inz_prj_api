@@ -16,6 +16,25 @@ export default function App() {
     let [value, updateCookie, deleteCookie] = useCookie("Token")
     const [forbidden, setForbidden] = useState(true)
 
+    let checkStatus = () => {
+        const headers = new Headers()
+        headers.append("Content-Type", "application/json")
+        headers.append("Authorization", "Bearer " + value)
+
+        const requestOptions = {
+            method: "POST",
+            headers: headers
+        }
+
+        fetch(`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_VERSION}/checkup`, requestOptions)
+            .then((response) => {
+                if (response.status !== 200)
+                    return true
+                else
+                    return false
+            })
+    }
+
     useEffect(() => {
         const headers = new Headers()
         headers.append("Content-Type", "application/json")
@@ -33,7 +52,7 @@ export default function App() {
                 else
                     setForbidden(false)
             })
-    }, [value])
+    },  [value])
 
     return (
         <BrowserRouter>
@@ -86,9 +105,9 @@ export default function App() {
                             <Route path={"/login"}
                                    element={<Login updateCookie={updateCookie}/>}/>
                             <Route path={"/logout"} element={<Logout deleteCookie={deleteCookie}/>}/>
-                            <Route path={"/admin"} element={<Admin jwt={value} forbidden={forbidden}/>}/>
+                            <Route path={"/admin"} element={<Admin jwt={value} checkStatus={checkStatus}/>}/>
                             <Route path={"/admin/movie/:id"}
-                                   element={<MovieAddEdit jwt={value} forbidden={forbidden}/>}/>
+                                   element={<MovieAddEdit jwt={value} checkStatus={checkStatus}/>}/>
                         </Routes>
                     </div>
                 </div>

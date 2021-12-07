@@ -10,7 +10,7 @@ import Alert from "../ui-components/Alert";
 import "./css/MovieAddEdit.css"
 import "react-confirm-alert/src/react-confirm-alert.css";
 
-export default function MovieAddEdit({jwt, forbidden}) {
+export default function MovieAddEdit({jwt, checkStatus}) {
     let params = useParams()
     let navigate = useNavigate()
 
@@ -78,7 +78,7 @@ export default function MovieAddEdit({jwt, forbidden}) {
                     label: 'Yes',
                     onClick: () => {
                         const requestOptions = {
-                            method: "POST",
+                            method: "DELETE",
                             body: JSON.stringify({id: params.id}),
                             headers: headers
                         }
@@ -104,7 +104,7 @@ export default function MovieAddEdit({jwt, forbidden}) {
     }
 
     useEffect(() => {
-        if (jwt === "" || forbidden) {
+        if (jwt === "" || checkStatus()) {
             navigate('/login')
             return
         }
@@ -124,7 +124,7 @@ export default function MovieAddEdit({jwt, forbidden}) {
                     setMovie(json.movie)
                 })
         }
-    }, [forbidden, jwt, navigate, params.id])
+    }, [checkStatus, jwt, navigate, params.id])
 
     if (error !== null)
         return <div>Error: {error.message}</div>
